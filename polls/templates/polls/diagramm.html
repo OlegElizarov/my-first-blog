@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title>Круговая диаграмма</title>
+  <script src="https://www.google.com/jsapi"></script>
+  <script>
+   google.load("visualization", "1", {packages:["corechart"]});
+   google.setOnLoadCallback(drawChart);
+   function drawChart() {
+
+    var dataArray = [['Text', 'Votes']]
+    for (var n = 0; n < question.choice_set.count ; n++)
+    {
+    dataArray.push(qt[n],qv[n]);
+    }
+    var data = google.visualization.arrayToDataTable(dataArray)
+    var options = {
+     title: '{{question.text}}',
+     is3D: true,
+     pieResidueSliceLabel: 'Остальное'
+    };
+    var chart = new google.visualization.PieChart(document.getElementById('air'));
+     chart.draw(data, options);
+   }
+  </script>
+ </head>
+ <body>
+  <div id="air" style="width: 500px; height: 400px;"></div>
+ </body>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+ {% endfor %}
+{{question.choice_set.count}}
+</html>

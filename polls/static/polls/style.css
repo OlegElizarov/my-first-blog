@@ -1,0 +1,7 @@
+li a {
+    color: green;
+}
+body {
+    background: white url("images/k-on-premium-header-1.jpg") no-repeat fixed center;
+    background-size: 700px 500px;
+}
