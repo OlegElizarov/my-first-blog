@@ -7,16 +7,20 @@
   <script>
    google.load("visualization", "1", {packages:["corechart"]});
    google.setOnLoadCallback(drawChart);
-   function drawChart() {
-
-    var dataArray = [['Text', 'Votes']]
-    for (var n = 0; n < question.choice_set.count ; n++)
-    {
-    dataArray.push(qt[n],qv[n]);
-    }
-    var data = google.visualization.arrayToDataTable(dataArray)
+   var n= 0;
+   var arr  =class {
+    var t: string,
+    var n: int,
+   };
+    {% for choice in question.choice_set.iterator %}
+    arr[n]=['{{choice.question_text}}',{{choice.votes}}]
+    n++
+    {% endfor %}
+    print(arr);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(arr);
     var options = {
-     title: '{{question.text}}',
+     title: '{{question.question_text}}' ,
      is3D: true,
      pieResidueSliceLabel: 'Остальное'
     };
@@ -31,5 +35,6 @@
 {% for choice in question.choice_set.all %}
     <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
  {% endfor %}
-{{question.choice_set.count}}
+
+
 </html>
