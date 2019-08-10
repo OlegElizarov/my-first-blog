@@ -7,17 +7,20 @@
   <script>
    google.load("visualization", "1", {packages:["corechart"]});
    google.setOnLoadCallback(drawChart);
-   var n= 0;
-   var arr  =class {
-    var t: string,
-    var n: int,
-   };
-    {% for choice in question.choice_set.iterator %}
-    arr[n]=['{{choice.question_text}}',{{choice.votes}}]
-    n++
-    {% endfor %}
-    print(arr);
-  function drawChart() {
+   var arr=new Array({{question.choice_set.count}});
+   var str = ('');
+   var i = 1;
+   var arr = [
+     ['Газ', 'Объём'],
+    ];
+    {% for choice in question.choice_set.all %}
+    {
+     str='{{ choice.choice_text }}';
+     arr[i]= [str,{{ choice.votes }}];
+     i++;
+    };
+     {% endfor %}
+   function drawChart() {
     var data = google.visualization.arrayToDataTable(arr);
     var options = {
      title: '{{question.question_text}}' ,
@@ -35,6 +38,7 @@
 {% for choice in question.choice_set.all %}
     <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
  {% endfor %}
+
 
 
 </html>
