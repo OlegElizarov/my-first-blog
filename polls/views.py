@@ -4,6 +4,8 @@ from django.urls import reverse
 from polls.models import Question, Choice
 from django.views import generic
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class IndexView(generic.ListView):
@@ -17,7 +19,7 @@ class IndexView(generic.ListView):
         ).order_by('-pub_date')[:5]
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin,generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
 
@@ -28,11 +30,11 @@ class DetailView(generic.DetailView):
         return Question.objects.filter(pub_date__lte=timezone.now())
 
 
-class ResultsView(generic.DetailView):
+class ResultsView(LoginRequiredMixin,generic.DetailView):
     model = Question
-    template_name = 'polls/results.html'
+    template_name = 'polls/diagramm.html'
 
-
+@login_required
 def vote(request, question_id):
     p = get_object_or_404(Question, pk=question_id)
     try:
@@ -54,7 +56,7 @@ def vote(request, question_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls:results', args=(p.id,)))
 
-
+@login_required
 def index(request):
     p = Question
     num_visits = request.session.get('num_visits', 0)
