@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from .forms import questionform
+from django.shortcuts import redirect
 
 
 class IndexView(generic.ListView):
@@ -82,3 +84,19 @@ def profil(request, user_id):
         context={'users_list': users_list, 'user_ID': user_ID,
                  'latest_question_list': latest_question_list}
     )
+
+def creation_quest(request):
+
+    if request.method  == "POST":
+        form = questionform(request.POST)
+        if form.is_valid():
+            quest = Question.create(
+                question_text= form.cleaned_data['q_text'],
+                pub_date = timezone.now(),
+                done_by = request.user
+            )
+            quest.save()
+            return HttpResponseRedirect(reverse('polls:index'))
+    else:
+        form = questionform()
+    return render(request, 'polls/question_create.html', {'form': form})

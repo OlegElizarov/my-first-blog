@@ -10,6 +10,11 @@ class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
 
+    @classmethod
+    def create(cls,question_text,done_by,pub_date):
+        question=cls(question_text=question_text,done_by=done_by,pub_date=pub_date)
+        return  question
+
     def __str__(self):
         return self.question_text
 
